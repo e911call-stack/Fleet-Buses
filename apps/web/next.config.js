@@ -18,24 +18,7 @@ const nextConfig = {
     ],
   },
 
-  // Enable API routes
-  api: {
-    responseLimit: '8mb',
-  },
-
-  // Internationalization
-  i18n: {
-    locales: ['en', 'ar', 'es'],
-    defaultLocale: 'en',
-  },
-
-  // Environment variables
-  env: {
-    NEXT_PUBLIC_APP_NAME: 'FleetGuard',
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-  },
-
-  // Webpack config
+  // Webpack config for polyfills
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
@@ -48,7 +31,7 @@ const nextConfig = {
   },
 
   // Headers for security
-  headers: async () => {
+  async headers() {
     return [
       {
         source: '/:path*',
@@ -74,15 +57,9 @@ const nextConfig = {
     ];
   },
 
-  // Redirects for old routes
-  redirects: async () => {
-    return [
-      {
-        source: '/',
-        destination: '/dashboard',
-        permanent: false,
-      },
-    ];
+  // Redirects configuration
+  async redirects() {
+    return [];
   },
 };
 
