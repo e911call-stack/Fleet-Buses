@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #007BFF;
+  --secondary-color: #6C757D;
+  --accent-color: #FF6B6B;
+  --background-color: #FFFFFF;
+  --text-color: #333333;
+  
+  --radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+html, body {
+  @apply bg-white text-gray-900;
+  color: var(--text-color);
+}
+
+/* Buttons */
+.btn {
+  @apply px-4 py-2 rounded-lg font-semibold transition-all duration-200 text-sm;
+}
+
+.btn-primary {
+  @apply text-white;
+  background-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  filter: brightness(0.9);
+}
+
+.btn-outline {
+  @apply border border-gray-300 text-gray-900;
+}
+
+.btn-outline:hover {
+  @apply bg-gray-50;
+}
+
+.btn-lg {
+  @apply px-6 py-3 text-base;
+}
+
+/* Cards */
+.card {
+  @apply bg-white rounded-lg shadow-md p-6 border border-gray-200;
+}
+
+.card-header {
+  @apply border-b border-gray-200 pb-4 mb-4;
+}
+
+/* Tables */
+.table {
+  @apply w-full border-collapse;
+}
+
+.table th {
+  @apply bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 border-b border-gray-200;
+}
+
+.table td {
+  @apply px-6 py-4 border-b border-gray-200;
+}
+
+.table tbody tr:hover {
+  @apply bg-gray-50;
+}
+
+/* Forms */
+input,
+textarea,
+select {
+  @apply border border-gray-300 rounded-lg px-4 py-2 font-sans text-sm focus:outline-none focus:ring-2;
+  focus-ring-color: var(--primary-color);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  @apply ring-2 ring-opacity-50;
+  ring-color: var(--primary-color);
+}
+
+/* Badges */
+.badge {
+  @apply inline-block px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-700;
+}
+
+.badge-danger {
+  @apply bg-red-100 text-red-700;
+}
+
+.badge-warning {
+  @apply bg-yellow-100 text-yellow-700;
+}
+
+.badge-info {
+  @apply bg-blue-100 text-blue-700;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full border-b-2;
+  border-color: var(--primary-color);
+}
+
+/* RTL support */
+[dir='rtl'] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir='rtl'] .text-left {
+  @apply text-right;
+}
+
+[dir='rtl'] .text-right {
+  @apply text-left;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .btn {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .card {
+    @apply p-4;
+  }
+}

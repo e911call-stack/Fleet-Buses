@@ -1,0 +1,72 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build --workspace=apps/web",
+  "devCommand": "npm run dev --workspace=apps/web",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": "apps/web/.next",
+  "public": false,
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "env": [
+    {
+      "key": "NEXT_PUBLIC_SUPABASE_URL",
+      "value": "@supabase_url",
+      "type": "secret"
+    },
+    {
+      "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "value": "@supabase_anon_key",
+      "type": "secret"
+    },
+    {
+      "key": "STRIPE_SECRET_KEY",
+      "value": "@stripe_secret_key",
+      "type": "secret"
+    },
+    {
+      "key": "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+      "value": "@stripe_publishable_key",
+      "type": "secret"
+    },
+    {
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "value": "@stripe_webhook_secret",
+      "type": "secret"
+    },
+    {
+      "key": "WHATSAPP_ACCESS_TOKEN",
+      "value": "@whatsapp_access_token",
+      "type": "secret"
+    },
+    {
+      "key": "WHATSAPP_PHONE_NUMBER_ID",
+      "value": "@whatsapp_phone_id",
+      "type": "secret"
+    },
+    {
+      "key": "NEXT_PUBLIC_MAPLIBRE_STYLE_URL",
+      "value": "https://demotiles.maplibre.org/style.json",
+      "type": "plaintext"
+    },
+    {
+      "key": "NEXT_PUBLIC_APP_URL",
+      "value": "https://fleetguard.vercel.app",
+      "type": "plaintext"
+    },
+    {
+      "key": "NODE_ENV",
+      "value": "production",
+      "type": "plaintext"
+    }
+  ],
+  "regions": ["iad1"],
+  "functions": {
+    "apps/web/src/pages/api/**": {
+      "maxDuration": 30
+    }
+  }
+}

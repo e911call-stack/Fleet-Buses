@@ -1,0 +1,158 @@
+/* Tenant Branding System */
+:root {
+  --tenant-primary: var(--primary-color, #007BFF);
+  --tenant-secondary: var(--secondary-color, #6C757D);
+  --tenant-accent: var(--accent-color, #FF6B6B);
+  --tenant-bg: var(--background-color, #FFFFFF);
+  --tenant-text: var(--text-color, #333333);
+  --tenant-logo-url: var(--logo-url, none);
+}
+
+/* Apply tenant colors */
+.btn-primary {
+  background-color: var(--tenant-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.9);
+}
+
+.btn-secondary {
+  background-color: var(--tenant-secondary);
+  color: white;
+}
+
+.btn-accent {
+  background-color: var(--tenant-accent);
+  color: white;
+}
+
+.text-primary {
+  color: var(--tenant-primary);
+}
+
+.text-secondary {
+  color: var(--tenant-secondary);
+}
+
+.text-accent {
+  color: var(--tenant-accent);
+}
+
+.border-primary {
+  border-color: var(--tenant-primary);
+}
+
+.bg-primary-light {
+  background-color: color-mix(in srgb, var(--tenant-primary) 10%, white);
+}
+
+.bg-primary-lighter {
+  background-color: color-mix(in srgb, var(--tenant-primary) 5%, white);
+}
+
+/* Header Branding */
+.tenant-header {
+  border-bottom-color: color-mix(in srgb, var(--tenant-primary) 20%, white);
+}
+
+.tenant-logo {
+  background-image: var(--tenant-logo-url);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Links */
+a {
+  color: var(--tenant-primary);
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Focus states */
+:focus {
+  outline-color: var(--tenant-primary);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--tenant-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tenant-primary) 10%, transparent);
+}
+
+/* Status badges using tenant colors */
+.status-active {
+  background-color: color-mix(in srgb, #10B981 20%, white);
+  color: #059669;
+}
+
+.status-pending {
+  background-color: color-mix(in srgb, var(--tenant-primary) 20%, white);
+  color: var(--tenant-primary);
+}
+
+.status-error {
+  background-color: color-mix(in srgb, #EF4444 20%, white);
+  color: #DC2626;
+}
+
+/* Tabs */
+.tab-active {
+  color: var(--tenant-primary);
+  border-bottom-color: var(--tenant-primary);
+  border-bottom-width: 2px;
+}
+
+.tab-inactive {
+  color: #6B7280;
+}
+
+.tab-inactive:hover {
+  color: var(--tenant-primary);
+}
+
+/* Map controls */
+.mapboxgl-ctrl-group button,
+.maplibregl-ctrl-group button {
+  border-color: var(--tenant-primary);
+}
+
+.maplibregl-ctrl-group button:hover,
+.mapboxgl-ctrl-group button:hover {
+  background-color: var(--tenant-primary);
+  color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-in-out;
+}
