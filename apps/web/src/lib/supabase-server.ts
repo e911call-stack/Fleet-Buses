@@ -1,4 +1,5 @@
-import { createServerClient, serialize } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr';
+import { serialize } from 'cookie';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { Database } from '@/types/supabase';
 

@@ -1,0 +1,10 @@
+{
+  "name": "@fleetguard/supabase",
+  "version": "1.0.0",
+  "description": "Supabase database migrations and configuration for FleetGuard",
+  "private": true,
+  "scripts": {
+    "migrate": "echo 'Run migrations manually via Supabase CLI'",
+    "seed": "echo 'Run seeds manually via Supabase CLI'"
+  }
+}
