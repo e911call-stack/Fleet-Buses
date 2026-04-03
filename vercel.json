@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm run build -w apps/web",
-  "devCommand": "npm run dev -w apps/web",
+  "buildCommand": "npm run build -w fleetguard-web",
+  "devCommand": "npm run dev -w fleetguard-web",
   "installCommand": "npm install",
   "framework": "nextjs",
   "outputDirectory": "apps/web/.next",
