@@ -34,7 +34,7 @@ export interface Profile {
   email: string;
   full_name?: string;
   phone_number?: string;
-  role: 'admin' | 'driver' | 'student' | 'parent';
+  role: 'super_admin' | 'admin' | 'driver' | 'student' | 'parent';
   permissions?: Record<string, boolean>;
   student_id?: string;
   parent_id?: string;

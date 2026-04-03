@@ -185,3 +185,63 @@ VALUES (
 
 -- Verify migration
 SELECT 'Multi-tenant setup completed' as status;
+
+-- ============================================
+-- SUPER ADMIN ROLE ADDITIONS
+-- Adds super_admin role with platform-wide RLS bypass
+-- ============================================
+
+-- 16. SUPER ADMIN HELPER FUNCTION
+CREATE OR REPLACE FUNCTION is_super_admin()
+RETURNS BOOLEAN AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM profiles
+    WHERE id = auth.uid()
+    AND role = 'super_admin'
+  )
+$$ LANGUAGE SQL STABLE SECURITY DEFINER;
+
+-- 17. RLS BYPASS POLICIES FOR SUPER ADMIN
+
+-- Tenants: super admin can view/manage all
+CREATE POLICY "super_admin_all_tenants" ON tenants
+  FOR ALL USING (is_super_admin());
+
+-- Profiles: super admin can view all
+CREATE POLICY "super_admin_all_profiles" ON profiles
+  FOR ALL USING (is_super_admin());
+
+-- Buses: super admin can view all
+CREATE POLICY "super_admin_all_buses" ON buses
+  FOR ALL USING (is_super_admin());
+
+-- Trips: super admin can view all
+CREATE POLICY "super_admin_all_trips" ON trips
+  FOR ALL USING (is_super_admin());
+
+-- Bus Locations: super admin can view all
+CREATE POLICY "super_admin_all_bus_locations" ON bus_locations
+  FOR ALL USING (is_super_admin());
+
+-- Scan Logs: super admin can view all
+CREATE POLICY "super_admin_all_scan_logs" ON scan_logs
+  FOR ALL USING (is_super_admin());
+
+-- 18. SEED SUPER ADMIN USER
+-- IMPORTANT: Replace the UUID below with the actual Supabase auth.users.id
+-- after creating the super admin user via Supabase Dashboard > Authentication.
+-- The email/password for Super Admin is managed in Supabase Auth, not here.
+
+-- Example seed (replace <YOUR_SUPABASE_AUTH_USER_ID>):
+-- INSERT INTO profiles (id, tenant_id, email, full_name, role, is_active)
+-- VALUES (
+--   '<YOUR_SUPABASE_AUTH_USER_ID>',
+--   NULL,                          -- super admins have no tenant
+--   'superadmin@fleetguard.app',
+--   'Platform Super Admin',
+--   'super_admin',
+--   true
+-- )
+-- ON CONFLICT (id) DO UPDATE SET role = 'super_admin';
+
+SELECT 'Super admin role setup completed' as status;
