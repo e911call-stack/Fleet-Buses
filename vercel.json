@@ -1,11 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rootDirectory": "apps/web",
-  "buildCommand": "cd ../.. && npm run build",
-  "devCommand": "next dev -p 3000",
-  "installCommand": "cd ../.. && npm install",
+  "buildCommand": "npm run build -w apps/web",
+  "devCommand": "npm run dev -w apps/web",
+  "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
+  "outputDirectory": "apps/web/.next",
   "public": false,
   "git": {
     "deploymentEnabled": {
@@ -14,7 +13,7 @@
   },
   "regions": ["iad1"],
   "functions": {
-    "src/pages/api/**": {
+    "apps/web/src/pages/api/**": {
       "maxDuration": 30
     }
   }
