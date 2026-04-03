@@ -17,7 +17,7 @@
     "@stripe/react-stripe-js": "^2.4.0",
     "@stripe/stripe-js": "^3.0.0",
     "@supabase/supabase-js": "^2.38.0",
-    "@supabase/ssr": "^2.2.2",
+    "@supabase/ssr": "^2.0.1",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "i18next": "^23.7.0",
