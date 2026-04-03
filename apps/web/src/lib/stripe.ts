@@ -103,5 +103,5 @@ export async function updateSubscription(
 
 // Helper to cancel subscription
 export async function cancelSubscription(subscriptionId: string) {
-  return await stripe.subscriptions.del(subscriptionId);
+  return await stripe.subscriptions.cancel(subscriptionId);
 }

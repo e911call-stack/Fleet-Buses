@@ -42,7 +42,7 @@ export function useTenant(slug?: string) {
             .eq('slug', slug)
             .single();
 
-          setTenant(data as TenantResult);
+          setTenant(data as unknown as TenantResult);
         } catch (error) {
           console.error('Error fetching tenant:', error);
         } finally {

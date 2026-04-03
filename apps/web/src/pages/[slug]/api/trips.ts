@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // GET - List trips
   if (req.method === 'GET') {
-    const { status } = req.query;
+    const status = typeof req.query.status === 'string' ? req.query.status : undefined;
     let query = supabase
       .from('trips')
       .select(`

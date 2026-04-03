@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useTenant } from '@/hooks/useTenant';
 import { useTenantBranding } from '@/hooks/useTenantBranding';
+import Image from 'next/image';
 import { Bus, Users, MapPin, AlertCircle } from 'lucide-react';
 import MapLibreMap from '@/components/MapLibreMap';
 import BusStats from '@/components/BusStats';
@@ -43,7 +44,7 @@ export default function DashboardPage() {
         <div className="text-center">
           <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900">School Not Found</h1>
-          <p className="text-gray-600 mt-2">The school you're looking for doesn't exist.</p>
+          <p className="text-gray-600 mt-2">The school you&apos;re looking for doesn&apos;t exist.</p>
         </div>
       </div>
     );
@@ -62,7 +63,7 @@ export default function DashboardPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center">
             <div>
               {branding?.logo_url ? (
-                <img src={branding.logo_url} alt={tenant.name} className="h-10" />
+                <Image src={branding.logo_url} alt={tenant.name} width={160} height={40} className="h-10 w-auto" />
               ) : (
                 <h1 className="text-2xl font-bold" style={{ color: branding?.primary_color }}>
                   {tenant.name}

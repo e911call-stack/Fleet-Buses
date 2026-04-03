@@ -119,11 +119,11 @@ select:focus {
 }
 
 [dir='rtl'] .text-left {
-  @apply text-right;
+  text-align: right !important;
 }
 
 [dir='rtl'] .text-right {
-  @apply text-left;
+  text-align: left !important;
 }
 
 /* Responsive utilities */
