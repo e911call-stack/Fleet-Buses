@@ -46,7 +46,7 @@ interface UserRow {
 
 interface BusRow {
   id: string;
-  plate_number: string;      // ✅ matches DB column name
+  plate_number: string;
   model: string | null;
   created_at: string;
   tenant_id: string;
@@ -170,8 +170,13 @@ export default function SuperAdminDashboard() {
         tenant_name: p.tenant_id ? tenantMap[p.tenant_id] || 'Unknown' : 'Platform',
       })));
 
+      // ✅ FIXED: Explicit mapping without spread to avoid TypeScript error
       setBuses((busesData || []).map(b => ({
-        ...b,
+        id: b.id,
+        plate_number: b.plate_number,
+        model: b.model,
+        created_at: b.created_at,
+        tenant_id: b.tenant_id,
         tenant_name: tenantMap[b.tenant_id] || 'Unknown',
       })));
 
@@ -260,7 +265,6 @@ export default function SuperAdminDashboard() {
       return;
     }
     const supabase = createClient();
-    // ✅ Fixed: map 'plate' (UI field) to 'plate_number' (DB column)
     const { error } = await supabase.from('buses').insert({
       plate_number: newBus.plate,
       model:        newBus.model || null,
@@ -390,7 +394,7 @@ export default function SuperAdminDashboard() {
                     {['School','Plan','Status','Joined'].map(h => (
                       <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
                     ))}
-                  </tr>
+                  </td>
                 </thead>
                 <tbody>
                   {tenants.slice(0,5).map(t => (
@@ -457,8 +461,8 @@ export default function SuperAdminDashboard() {
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-600/20 hover:bg-red-600/40 text-red-400 rounded-lg text-xs font-semibold transition">
                           <Trash2 className="h-3 w-3" /> Delete
                         </button>
-                       </td>
-                     </tr>
+                      </td>
+                    </tr>
                   ))}
                 </tbody>
               </table>
@@ -718,7 +722,7 @@ export default function SuperAdminDashboard() {
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 rounded-lg text-xs font-semibold transition">
                           <Edit2 className="h-3 w-3" /> Change Plan
                         </button>
-                      </td>
+                       </td>
                     </tr>
                   ))}
                 </tbody>
