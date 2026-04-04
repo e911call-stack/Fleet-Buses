@@ -47,7 +47,6 @@ interface UserRow {
 interface BusRow {
   id: string;
   plate_number: string;
-  // model removed because column does not exist in DB
   created_at: string;
   tenant_id: string;
   tenant_name?: string;
@@ -117,7 +116,7 @@ export default function SuperAdminDashboard() {
   const [editTenant,    setEditTenant]    = useState<TenantRow | null>(null);
   const [addBusModal,   setAddBusModal]   = useState(false);
   const [addUserModal,  setAddUserModal]  = useState(false);
-  const [newBus,   setNewBus]   = useState({ plate: '', tenant_id: '' }); // removed model
+  const [newBus,   setNewBus]   = useState({ plate: '', tenant_id: '' });
   const [newUser,  setNewUser]  = useState({ email: '', full_name: '', role: 'viewer', tenant_id: '', password: '' });
 
   // ── Auth verify ──────────────────────────────────────────
@@ -156,7 +155,7 @@ export default function SuperAdminDashboard() {
           .select('id, full_name, email, role, is_active, created_at, tenant_id')
           .order('created_at', { ascending: false }),
         supabase.from('buses')
-          .select('id, plate_number, created_at, tenant_id') // removed 'model'
+          .select('id, plate_number, created_at, tenant_id') // removed 'model' because column doesn't exist
           .order('created_at', { ascending: false }),
       ]);
 
@@ -264,10 +263,11 @@ export default function SuperAdminDashboard() {
       return;
     }
     const supabase = createClient();
+    // ✅ Added capacity: 0 because the column is required and not nullable
     const { error } = await supabase.from('buses').insert({
       plate_number: newBus.plate,
       tenant_id:    newBus.tenant_id,
-      // model omitted because column does not exist
+      capacity:     0,   // default value; adjust as needed
     });
     if (error) { toast.error(error.message); return; }
     toast.success('Bus added!');
@@ -392,7 +392,7 @@ export default function SuperAdminDashboard() {
                     {['School','Plan','Status','Joined'].map(h => (
                       <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
                     ))}
-                  <tr>
+                  </tr>
                 </thead>
                 <tbody>
                   {tenants.slice(0,5).map(t => (
@@ -704,7 +704,7 @@ export default function SuperAdminDashboard() {
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${STATUS_COLORS[t.subscription_status] || ''}`}>
                           {STATUS_ICONS[t.subscription_status]}{t.subscription_status}
                         </span>
-                      </td>
+                       </td>
                       <td className="px-5 py-3.5 text-gray-500 text-xs">
                         {t.trial_ends_at ? new Date(t.trial_ends_at).toLocaleDateString() : '—'}
                       </td>
