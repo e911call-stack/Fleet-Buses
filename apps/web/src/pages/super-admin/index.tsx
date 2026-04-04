@@ -46,8 +46,8 @@ interface UserRow {
 
 interface BusRow {
   id: string;
-  plate_number: string;
-  model: string | null; // Kept in interface for UI compatibility, but removed from DB calls
+  plate_number: string;      // ✅ matches DB column name
+  model: string | null;
   created_at: string;
   tenant_id: string;
   tenant_name?: string;
@@ -155,9 +155,8 @@ export default function SuperAdminDashboard() {
         supabase.from('profiles')
           .select('id, full_name, email, role, is_active, created_at, tenant_id')
           .order('created_at', { ascending: false }),
-        // FIX: Removed 'model' from select as it does not exist in DB
         supabase.from('buses')
-          .select('id, plate_number, created_at, tenant_id')
+          .select('id, plate_number, model, created_at, tenant_id')
           .order('created_at', { ascending: false }),
       ]);
 
@@ -171,13 +170,10 @@ export default function SuperAdminDashboard() {
         tenant_name: p.tenant_id ? tenantMap[p.tenant_id] || 'Unknown' : 'Platform',
       })));
 
-      setBuses((busesData || []).map(b => {
-        const bus = b as any;
-        return {
-          ...bus,
-          tenant_name: tenantMap[bus.tenant_id] || 'Unknown',
-        };
-      }));
+      setBuses((busesData || []).map(b => ({
+        ...b,
+        tenant_name: tenantMap[b.tenant_id] || 'Unknown',
+      })));
 
       const td = tenantsData || [];
       const planBreakdown = td.reduce(
@@ -264,11 +260,11 @@ export default function SuperAdminDashboard() {
       return;
     }
     const supabase = createClient();
-    // FIX: Removed 'model' from insert as column does not exist in DB
+    // ✅ Fixed: map 'plate' (UI field) to 'plate_number' (DB column)
     const { error } = await supabase.from('buses').insert({
       plate_number: newBus.plate,
-      // model: newBus.model || null, // Column does not exist in DB
-      tenant_id: newBus.tenant_id,
+      model:        newBus.model || null,
+      tenant_id:    newBus.tenant_id,
     });
     if (error) { toast.error(error.message); return; }
     toast.success('Bus added!');
@@ -461,8 +457,8 @@ export default function SuperAdminDashboard() {
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-600/20 hover:bg-red-600/40 text-red-400 rounded-lg text-xs font-semibold transition">
                           <Trash2 className="h-3 w-3" /> Delete
                         </button>
-                      </td>
-                    </tr>
+                       </td>
+                     </tr>
                   ))}
                 </tbody>
               </table>
