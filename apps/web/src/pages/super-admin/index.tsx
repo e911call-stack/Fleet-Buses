@@ -46,7 +46,7 @@ interface UserRow {
 
 interface BusRow {
   id: string;
-  plate: string;
+  plate_number: string; // CHANGED: Updated to match DB column 'plate_number'
   model: string | null;
   created_at: string;
   tenant_id: string;
@@ -117,6 +117,7 @@ export default function SuperAdminDashboard() {
   const [editTenant,    setEditTenant]    = useState<TenantRow | null>(null);
   const [addBusModal,   setAddBusModal]   = useState(false);
   const [addUserModal,  setAddUserModal]  = useState(false);
+  // newBus.plate matches the input field name
   const [newBus,   setNewBus]   = useState({ plate: '', model: '', tenant_id: '' });
   const [newUser,  setNewUser]  = useState({ email: '', full_name: '', role: 'viewer', tenant_id: '', password: '' });
 
@@ -156,7 +157,7 @@ export default function SuperAdminDashboard() {
           .select('id, full_name, email, role, is_active, created_at, tenant_id')
           .order('created_at', { ascending: false }),
         supabase.from('buses')
-          .select('id, plate, model, created_at, tenant_id')
+          .select('id, plate_number, model, created_at, tenant_id') // CHANGED: plate -> plate_number
           .order('created_at', { ascending: false }),
       ]);
 
@@ -170,7 +171,7 @@ export default function SuperAdminDashboard() {
         tenant_name: p.tenant_id ? tenantMap[p.tenant_id] || 'Unknown' : 'Platform',
       })));
 
-      // FIX: Explicitly cast to 'any' to bypass all type checking issues on this block
+      // CHANGED: Using plate_number in mapping
       setBuses((busesData || []).map(b => {
         const bus = b as any;
         return {
@@ -264,8 +265,9 @@ export default function SuperAdminDashboard() {
       return;
     }
     const supabase = createClient();
+    // CHANGED: Map 'plate' (input) to 'plate_number' (DB column)
     const { error } = await supabase.from('buses').insert({
-      plate:     newBus.plate,
+      plate_number: newBus.plate,
       model:     newBus.model || null,
       tenant_id: newBus.tenant_id,
     });
@@ -299,8 +301,9 @@ export default function SuperAdminDashboard() {
     u.full_name?.toLowerCase().includes(q) ||
     u.email?.toLowerCase().includes(q) ||
     u.role.toLowerCase().includes(q));
+  // CHANGED: Search filter using plate_number
   const filteredBuses = buses.filter(b =>
-    b.plate.toLowerCase().includes(q) ||
+    b.plate_number.toLowerCase().includes(q) ||
     b.model?.toLowerCase().includes(q) ||
     b.tenant_name?.toLowerCase().includes(q));
 
@@ -618,7 +621,7 @@ export default function SuperAdminDashboard() {
                       </td></tr>
                     ) : filteredBuses.map(b => (
                       <tr key={b.id} className="border-b border-gray-800/60 hover:bg-gray-800/40 transition">
-                        <td className="px-5 py-3.5 font-medium text-white font-mono">{b.plate}</td>
+                        <td className="px-5 py-3.5 font-medium text-white font-mono">{b.plate_number}</td>
                         <td className="px-5 py-3.5 text-gray-300">{b.model || '—'}</td>
                         <td className="px-5 py-3.5 text-gray-400 text-xs">{b.tenant_name}</td>
                         <td className="px-5 py-3.5 text-gray-500 text-xs">{new Date(b.created_at).toLocaleDateString()}</td>
