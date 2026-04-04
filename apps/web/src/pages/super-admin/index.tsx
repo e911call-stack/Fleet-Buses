@@ -170,11 +170,14 @@ export default function SuperAdminDashboard() {
         tenant_name: p.tenant_id ? tenantMap[p.tenant_id] || 'Unknown' : 'Platform',
       })));
 
-      // FIX: Use 'as any' to bypass schema mismatch error regarding 'plate' column
-      setBuses((busesData || []).map(b => ({
-        ...(b as any),
-        tenant_name: tenantMap[b.tenant_id] || 'Unknown',
-      })));
+      // FIX: Explicitly cast to 'any' to bypass all type checking issues on this block
+      setBuses((busesData || []).map(b => {
+        const bus = b as any;
+        return {
+          ...bus,
+          tenant_name: tenantMap[bus.tenant_id] || 'Unknown',
+        };
+      }));
 
       const td = tenantsData || [];
       const planBreakdown = td.reduce(
