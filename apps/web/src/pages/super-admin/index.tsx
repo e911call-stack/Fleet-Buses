@@ -47,7 +47,7 @@ interface UserRow {
 interface BusRow {
   id: string;
   plate_number: string;
-  model: string | null;
+  // model removed because column does not exist in DB
   created_at: string;
   tenant_id: string;
   tenant_name?: string;
@@ -117,7 +117,7 @@ export default function SuperAdminDashboard() {
   const [editTenant,    setEditTenant]    = useState<TenantRow | null>(null);
   const [addBusModal,   setAddBusModal]   = useState(false);
   const [addUserModal,  setAddUserModal]  = useState(false);
-  const [newBus,   setNewBus]   = useState({ plate: '', model: '', tenant_id: '' });
+  const [newBus,   setNewBus]   = useState({ plate: '', tenant_id: '' }); // removed model
   const [newUser,  setNewUser]  = useState({ email: '', full_name: '', role: 'viewer', tenant_id: '', password: '' });
 
   // ── Auth verify ──────────────────────────────────────────
@@ -156,7 +156,7 @@ export default function SuperAdminDashboard() {
           .select('id, full_name, email, role, is_active, created_at, tenant_id')
           .order('created_at', { ascending: false }),
         supabase.from('buses')
-          .select('id, plate_number, model, created_at, tenant_id')
+          .select('id, plate_number, created_at, tenant_id') // removed 'model'
           .order('created_at', { ascending: false }),
       ]);
 
@@ -170,11 +170,10 @@ export default function SuperAdminDashboard() {
         tenant_name: p.tenant_id ? tenantMap[p.tenant_id] || 'Unknown' : 'Platform',
       })));
 
-      // ✅ FIXED: Explicit mapping without spread to avoid TypeScript error
+      // Explicit mapping without model
       setBuses((busesData || []).map(b => ({
         id: b.id,
         plate_number: b.plate_number,
-        model: b.model,
         created_at: b.created_at,
         tenant_id: b.tenant_id,
         tenant_name: tenantMap[b.tenant_id] || 'Unknown',
@@ -267,13 +266,13 @@ export default function SuperAdminDashboard() {
     const supabase = createClient();
     const { error } = await supabase.from('buses').insert({
       plate_number: newBus.plate,
-      model:        newBus.model || null,
       tenant_id:    newBus.tenant_id,
+      // model omitted because column does not exist
     });
     if (error) { toast.error(error.message); return; }
     toast.success('Bus added!');
     setAddBusModal(false);
-    setNewBus({ plate: '', model: '', tenant_id: '' });
+    setNewBus({ plate: '', tenant_id: '' });
     fetchAll();
   };
 
@@ -302,7 +301,6 @@ export default function SuperAdminDashboard() {
     u.role.toLowerCase().includes(q));
   const filteredBuses = buses.filter(b =>
     b.plate_number.toLowerCase().includes(q) ||
-    b.model?.toLowerCase().includes(q) ||
     b.tenant_name?.toLowerCase().includes(q));
 
   if (isVerifying) {
@@ -394,7 +392,7 @@ export default function SuperAdminDashboard() {
                     {['School','Plan','Status','Joined'].map(h => (
                       <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
                     ))}
-                  </td>
+                  <tr>
                 </thead>
                 <tbody>
                   {tenants.slice(0,5).map(t => (
@@ -607,20 +605,19 @@ export default function SuperAdminDashboard() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-gray-800">
-                      {['Plate','Model','Tenant','Added','Actions'].map(h => (
+                      {['Plate','Tenant','Added','Actions'].map(h => (
                         <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {filteredBuses.length === 0 ? (
-                      <tr><td colSpan={5} className="px-5 py-10 text-center text-gray-600">
+                      <tr><td colSpan={4} className="px-5 py-10 text-center text-gray-600">
                         {tenants.length === 0 ? 'Create a tenant first before adding buses' : 'No buses found'}
                       </td></tr>
                     ) : filteredBuses.map(b => (
                       <tr key={b.id} className="border-b border-gray-800/60 hover:bg-gray-800/40 transition">
                         <td className="px-5 py-3.5 font-medium text-white font-mono">{b.plate_number}</td>
-                        <td className="px-5 py-3.5 text-gray-300">{b.model || '—'}</td>
                         <td className="px-5 py-3.5 text-gray-400 text-xs">{b.tenant_name}</td>
                         <td className="px-5 py-3.5 text-gray-500 text-xs">{new Date(b.created_at).toLocaleDateString()}</td>
                         <td className="px-5 py-3.5">
@@ -645,12 +642,6 @@ export default function SuperAdminDashboard() {
                     <input className={inputCls} placeholder="e.g. AB-1234"
                       value={newBus.plate}
                       onChange={e => setNewBus(p => ({ ...p, plate: e.target.value }))} />
-                  </div>
-                  <div>
-                    <label className={labelCls}>Model</label>
-                    <input className={inputCls} placeholder="e.g. Toyota Coaster"
-                      value={newBus.model}
-                      onChange={e => setNewBus(p => ({ ...p, model: e.target.value }))} />
                   </div>
                   <div>
                     <label className={labelCls}>Assign to Tenant *</label>
@@ -722,7 +713,7 @@ export default function SuperAdminDashboard() {
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-400 rounded-lg text-xs font-semibold transition">
                           <Edit2 className="h-3 w-3" /> Change Plan
                         </button>
-                       </td>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
