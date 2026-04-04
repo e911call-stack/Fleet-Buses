@@ -171,7 +171,7 @@ export default function SuperAdminDashboard() {
       })));
 
       setBuses((busesData || []).map(b => ({
-        ...b,
+        ...(b as BusRow), // FIX: Type assertion added to resolve spread error
         tenant_name: tenantMap[b.tenant_id] || 'Unknown',
       })));
 
