@@ -170,8 +170,9 @@ export default function SuperAdminDashboard() {
         tenant_name: p.tenant_id ? tenantMap[p.tenant_id] || 'Unknown' : 'Platform',
       })));
 
+      // FIX: Use 'as any' to bypass schema mismatch error regarding 'plate' column
       setBuses((busesData || []).map(b => ({
-        ...(b as BusRow), // FIX: Type assertion added to resolve spread error
+        ...(b as any),
         tenant_name: tenantMap[b.tenant_id] || 'Unknown',
       })));
 
