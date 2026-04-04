@@ -46,8 +46,8 @@ interface UserRow {
 
 interface BusRow {
   id: string;
-  plate_number: string; // CHANGED: Updated to match DB column 'plate_number'
-  model: string | null;
+  plate_number: string;
+  model: string | null; // Kept in interface for UI compatibility, but removed from DB calls
   created_at: string;
   tenant_id: string;
   tenant_name?: string;
@@ -117,7 +117,6 @@ export default function SuperAdminDashboard() {
   const [editTenant,    setEditTenant]    = useState<TenantRow | null>(null);
   const [addBusModal,   setAddBusModal]   = useState(false);
   const [addUserModal,  setAddUserModal]  = useState(false);
-  // newBus.plate matches the input field name
   const [newBus,   setNewBus]   = useState({ plate: '', model: '', tenant_id: '' });
   const [newUser,  setNewUser]  = useState({ email: '', full_name: '', role: 'viewer', tenant_id: '', password: '' });
 
@@ -156,8 +155,9 @@ export default function SuperAdminDashboard() {
         supabase.from('profiles')
           .select('id, full_name, email, role, is_active, created_at, tenant_id')
           .order('created_at', { ascending: false }),
+        // FIX: Removed 'model' from select as it does not exist in DB
         supabase.from('buses')
-          .select('id, plate_number, model, created_at, tenant_id') // CHANGED: plate -> plate_number
+          .select('id, plate_number, created_at, tenant_id')
           .order('created_at', { ascending: false }),
       ]);
 
@@ -171,7 +171,6 @@ export default function SuperAdminDashboard() {
         tenant_name: p.tenant_id ? tenantMap[p.tenant_id] || 'Unknown' : 'Platform',
       })));
 
-      // CHANGED: Using plate_number in mapping
       setBuses((busesData || []).map(b => {
         const bus = b as any;
         return {
@@ -265,10 +264,10 @@ export default function SuperAdminDashboard() {
       return;
     }
     const supabase = createClient();
-    // CHANGED: Map 'plate' (input) to 'plate_number' (DB column)
+    // FIX: Removed 'model' from insert as column does not exist in DB
     const { error } = await supabase.from('buses').insert({
       plate_number: newBus.plate,
-      model:     newBus.model || null,
+      // model: newBus.model || null, // Column does not exist in DB
       tenant_id: newBus.tenant_id,
     });
     if (error) { toast.error(error.message); return; }
@@ -301,7 +300,6 @@ export default function SuperAdminDashboard() {
     u.full_name?.toLowerCase().includes(q) ||
     u.email?.toLowerCase().includes(q) ||
     u.role.toLowerCase().includes(q));
-  // CHANGED: Search filter using plate_number
   const filteredBuses = buses.filter(b =>
     b.plate_number.toLowerCase().includes(q) ||
     b.model?.toLowerCase().includes(q) ||
